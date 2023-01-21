@@ -1,9 +1,48 @@
 ﻿@page "/ordersxmlreader"
+@using System.Xml.Linq;
 
 <PageTitle>XML Reader</PageTitle>
 
 <h1>XML Reader</h1>
 
+<!-- Choose a XML file -->
+<button onclick="document.getElementById('flpicker').click()">Pick a XML file</button>
+<InputFile id="flpicker" OnChange="@ReadFile" hidden />
+
+<!-- Display XML file's content (customers, shops, terminal) -->
 <CustomersGrid />
-<TerminalsGrid />
 <ShopsGrid />
+<TerminalsGrid />
+
+
+@code{
+
+    private async Task ReadFile(InputFileChangeEventArgs e)
+    {
+        if (e.File.ContentType == "text/xml")
+        {
+            var xmlFileString = await new StreamReader(e.File.OpenReadStream(e.File.Size)).ReadToEndAsync();
+
+            // todo 1) parse XML and bind it to
+            //          -   CustomersGrid's customers variable,
+            //          -   ShopsGrid's shops variable
+            //          -   TerminalsGrid's terminals variable
+            await BindXml(XElement.Parse(xmlFileString));
+        }
+        else
+        {
+            // todo print BlazorBootstrap's error/warning popup "Unsupported file. Selected file must be XML!"
+        }
+    }
+
+    private async Task BindXml(XElement xmlTree)
+    {
+        foreach (var item in xmlTree.Elements().ToList())
+        {
+            // todo bind it to
+            //          -   CustomersGrid's customers variable,
+            //          -   ShopsGrid's shops variable
+            //          -   TerminalsGrid's terminals variable
+        }
+    }
+}

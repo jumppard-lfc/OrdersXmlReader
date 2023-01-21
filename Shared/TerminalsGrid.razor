@@ -1,4 +1,6 @@
-﻿<h3>Terminals</h3>
+﻿@using OrdersReaderBlazorApp.Data;
+
+<h3>Terminals</h3>
 
 <Grid @ref="grid" TItem="Employee1" class="table table-hover table-bordered table-striped" DataProvider="EmployeesDataProvider" AllowFiltering="true" Responsive="true">
     <GridColumn TItem="Employee1" HeaderText="Id" PropertyName="Id">
@@ -18,7 +20,7 @@
     </GridColumn>
 </Grid>
 
-@using OrdersReaderBlazorApp.Data;
+
 @code {
 
 

@@ -1,4 +1,6 @@
-﻿<h3>Customers</h3>
+﻿@using OrdersReaderBlazorApp.Data;
+
+<h3>Customers</h3>
 
 <Grid @ref="grid" TItem="Employee1" class="table table-hover table-bordered table-striped" DataProvider="EmployeesDataProvider" AllowFiltering="true" Responsive="true">
     <GridColumn TItem="Employee1" HeaderText="Id" PropertyName="Id">
@@ -18,7 +20,6 @@
     </GridColumn>
 </Grid>
 
-@using OrdersReaderBlazorApp.Data;
 @code {
 
 
@@ -41,7 +42,7 @@
     private IEnumerable<Employee1> GetEmployees()
     {
         return new List<Employee1>
-    {
+{
             new Employee1 { Id = 107, Name = "Alice", Designation = "AI Engineer", DOJ = new DateOnly(1998, 11, 17), IsActive = true },
             new Employee1 { Id = 103, Name = "Bob", Designation = "Senior DevOps Engineer", DOJ = new DateOnly(1985, 1, 5), IsActive = true },
             new Employee1 { Id = 106, Name = "John", Designation = "Data Engineer", DOJ = new DateOnly(1995, 4, 17), IsActive = true },
