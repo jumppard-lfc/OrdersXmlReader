@@ -1,5 +1,6 @@
 ﻿@page "/ordersxmlreader"
 @using System.Xml.Linq;
+@using Data;
 
 <PageTitle>XML Reader</PageTitle>
 
@@ -16,6 +17,10 @@
 
 
 @code{
+
+    private List<Company> companies = new List<Company>();
+    private List<Shop> shops = new List<Shop>();
+    private List<Terminal> terminals = new List<Terminal>();
 
     private async Task ReadFile(InputFileChangeEventArgs e)
     {
@@ -37,12 +42,60 @@
 
     private async Task BindXml(XElement xmlTree)
     {
-        foreach (var item in xmlTree.Elements().ToList())
+
+        async Task<List<Company>> BindCompanies(XElement? companiesXml)
         {
-            // todo bind it to
-            //          -   CustomersGrid's customers variable,
-            //          -   ShopsGrid's shops variable
-            //          -   TerminalsGrid's terminals variable
+            var bindedCompanies = new List<Company>();
+            if (companiesXml != null)
+            {
+                var companies = companiesXml.Elements().Where(x => x.Name.LocalName.ToString() == "GMFRecord").ToList();
+                foreach (var company in companies)
+                {
+                    var newCompany = new Company()
+                    {
+                        companyAcqCode = Convert.ToInt32(company.Elements().Where(x => x.Attribute("name").Value == "companyAcqCode").First().Value),
+                        companyAddressType = company.Elements().Where(x => x.Attribute("name").Value == "companyAddressType").First().Value,
+                        companyCity = company.Elements().Where(x => x.Attribute("name").Value == "companyCity").First().Value,
+                        companyContactPerson = company.Elements().Where(x => x.Attribute("name").Value == "companyContactPerson").First().Value,
+                        companyContactPersonFunction = company.Elements().Where(x => x.Attribute("name").Value == "companyContactPersonFunction").First().Value,
+                        companyCountry = company.Elements().Where(x => x.Attribute("name").Value == "companyCountry").First().Value,
+                        companyHouseNum = company.Elements().Where(x => x.Attribute("name").Value == "companyHouseNum").First().Value,
+                        companyId = company.Elements().Where(x => x.Attribute("name").Value == "companyId").First().Value,
+                        companyName = company.Elements().Where(x => x.Attribute("name").Value == "companyName").First().Value,
+                        companyNickname = company.Elements().Where(x => x.Attribute("name").Value == "companyNickname").First().Value,
+                        companyProvinceCode = company.Elements().Where(x => x.Attribute("name").Value == "companyProvinceCode").First().Value,
+                        companyStatus = company.Elements().Where(x => x.Attribute("name").Value == "companyStatus").First().Value,
+                        companyStreet = company.Elements().Where(x => x.Attribute("name").Value == "companyStreet").First().Value,
+                        companyZip = company.Elements().Where(x => x.Attribute("name").Value == "companyZip").First().Value,
+                    };
+
+                    bindedCompanies.Add(newCompany);
+                }
+            }
+
+            return bindedCompanies;
         }
+
+        async Task<List<Shop>> BindShops(XElement? shopsXml)
+        {
+            // todo
+            return new List<Shop>();
+        }
+
+        async Task<List<Terminal>> BindTerminals(XElement? terminalsXml)
+        {
+            // todo
+            return new List<Terminal>();
+        }
+
+        // bind it to
+        //      -   CustomersGrid's customers variable,
+        //      -   ShopsGrid's shops variable
+        //      -   TerminalsGrid's terminals variable
+        companies = await BindCompanies(xmlTree.Elements().Where(x=>x.Name.NamespaceName.ToString().Contains("company")).FirstOrDefault());
+
+        shops = await BindShops(xmlTree.Elements().Where(x => x.Name.NamespaceName.ToString().Contains("shop")).FirstOrDefault());
+
+        terminals = await BindTerminals(xmlTree.Elements().Where(x => x.Name.NamespaceName.ToString().Contains("terminal")).FirstOrDefault());
     }
 }
