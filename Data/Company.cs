@@ -20,7 +20,7 @@ namespace OrdersReaderBlazorApp.Data
 	 */
     public class Company
 	{
-		public int companyAcqCode { get; set; }
+		public int? companyAcqCode { get; set; }
 		public string companyId { get; set; }
 		public string companyName { get; set; }
 		public string companyStatus { get; set; }
