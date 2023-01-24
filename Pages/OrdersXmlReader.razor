@@ -11,9 +11,11 @@
 <InputFile id="flpicker" OnChange="@ReadFile" hidden />
 
 <!-- Display XML file's content (customers, shops, terminal) -->
-<CustomersGrid />
+<CompaniesGrid companies="@companies" foo="@foo" />
 <ShopsGrid />
 <TerminalsGrid />
+
+<div id="thumb0" class="thumbs" onclick="@klikaj">knock knock</div>
 
 
 @code{
@@ -21,6 +23,13 @@
     private List<Company> companies = new List<Company>();
     private List<Shop> shops = new List<Shop>();
     private List<Terminal> terminals = new List<Terminal>();
+
+    private string foo = "";
+
+    private void klikaj()
+    {
+        foo = "aaa";
+    }
 
     private async Task ReadFile(InputFileChangeEventArgs e)
     {
@@ -45,7 +54,7 @@
 
         async Task<List<Company>> BindCompanies(XElement? companiesXml)
         {
-            var bindedCompanies = new List<Company>();
+            List<Company> bindedCompanies = new List<Company>();
             if (companiesXml != null)
             {
                 var companies = companiesXml.Elements().Where(x => x.Name.LocalName.ToString() == "GMFRecord").ToList();
@@ -86,61 +95,6 @@
                 foreach (var shop in shops)
                 {
 
-
-                    // temp, delete me
-                    // todo parse all non string properties 
-                    var fooshopAcqCode = Convert.ToInt32(shop.Elements().Where(x => x.Attribute("name").Value == "shopAcqCode").First().Value);
-                    var fooshopCompanyId = shop.Elements().Where(x => x.Attribute("name").Value == "shopCompanyId").First().Value;
-                    var fooshopId = shop.Elements().Where(x => x.Attribute("name").Value == "shopId").First().Value;
-                    var fooshopRecordAction = shop.Elements().Where(x => x.Attribute("name").Value == "shopRecordAction").First().Value;
-                    var fooshopName = shop.Elements().Where(x => x.Attribute("name").Value == "shopName").First().Value;
-                    var fooshopStatus = shop.Elements().Where(x => x.Attribute("name").Value == "shopStatus").First().Value;
-                    var fooshopContactPerson = shop.Elements().Where(x => x.Attribute("name").Value == "shopContactPerson").First().Value;
-                    var fooshopContactPersonFunction = shop.Elements().Where(x => x.Attribute("name").Value == "shopContactPersonFunction").First().Value;
-                    var fooshopAgentCode = shop.Elements().Where(x => x.Attribute("name").Value == "shopAgentCode").First().Value;
-                    var fooshopRegisterNumber = Convert.ToInt32(shop.Elements().Where(x => x.Attribute("name").Value == "shopRegisterNumber").First().Value);
-                    var fooshopRegisterProvince = shop.Elements().Where(x => x.Attribute("name").Value == "shopRegisterProvince").First().Value;
-                    var fooshopMCC = Convert.ToInt32(shop.Elements().Where(x => x.Attribute("name").Value == "shopMCC").First().Value);
-                    var fooshopEnablePAN = shop.Elements().Where(x => x.Attribute("name").Value == "shopEnablePAN").First().Value;
-                    var fooshopDefaultRefundFlag = shop.Elements().Where(x => x.Attribute("name").Value == "shopDefaultRefundFlag").First().Value;
-                    var fooshopDefaultAuthFlag = shop.Elements().Where(x => x.Attribute("name").Value == "shopDefaultAuthFlag").First().Value;
-                    var fooshopDefaultSignaturePin = shop.Elements().Where(x => x.Attribute("name").Value == "shopDefaultSignaturePin").First().Value;
-                    var fooshopDefaultOfflineFloorLimit = Convert.ToInt32(shop.Elements().Where(x => x.Attribute("name").Value == "shopDefaultOfflineFloorLimit").First().Value);
-                    var fooshopDefaultOfflineFloorCurrenc = Convert.ToInt32(shop.Elements().Where(x => x.Attribute("name").Value == "shopDefaultOfflineFloorCurrenc").First().Value);
-                    var fooshopDefaultOfflineTipParameter = Convert.ToInt32(shop.Elements().Where(x => x.Attribute("name").Value == "shopDefaultOfflineTipParameter").First().Value);
-                    var fooshopDefaultRandNum = Convert.ToInt32(shop.Elements().Where(x => x.Attribute("name").Value == "shopDefaultRandNum").First().Value);
-                    var fooshopDefaultOfflineKeyed = shop.Elements().Where(x => x.Attribute("name").Value == "shopDefaultOfflineKeyed").First().Value;
-                    var fooshopDefaultCATInd = shop.Elements().Where(x => x.Attribute("name").Value == "shopDefaultCATInd").First().Value;
-                    var fooshopDefaultCATMaxNum = Convert.ToInt32(shop.Elements().Where(x => x.Attribute("name").Value == "shopDefaultCATMaxNum").First().Value);
-                    var fooshopHotelReserv = shop.Elements().Where(x => x.Attribute("name").Value == "shopHotelReserv").First().Value;
-                    var fooshopQuasiCash = shop.Elements().Where(x => x.Attribute("name").Value == "shopQuasiCash").First().Value;
-                    var fooshopCash = shop.Elements().Where(x => x.Attribute("name").Value == "shopCash").First().Value;
-                    var fooshopTurnoverLetterFlag = shop.Elements().Where(x => x.Attribute("name").Value == "shopTurnoverLetterFlag").First().Value;
-                    var fooshopAggrCode = shop.Elements().Where(x => x.Attribute("name").Value == "shopAggrCode").First().Value;
-                    var fooshopGeoSectorCode = shop.Elements().Where(x => x.Attribute("name").Value == "shopGeoSectorCode").First().Value;
-                    var fooshopStatementType = shop.Elements().Where(x => x.Attribute("name").Value == "shopStatementType").First().Value;
-                    var fooshopStatementCycle = shop.Elements().Where(x => x.Attribute("name").Value == "shopStatementCycle").First().Value;
-                    var fooshopAdmContacPerson = shop.Elements().Where(x => x.Attribute("name").Value == "shopAdmContacPerson").First().Value;
-                    var fooshopAdmTitleOfThePerson = shop.Elements().Where(x => x.Attribute("name").Value == "shopAdmTitleOfThePerson").First().Value;
-                    var fooshopNickname = shop.Elements().Where(x => x.Attribute("name").Value == "shopNickname").First().Value;
-                    var fooshopFirstContactMobileNumber = shop.Elements().Where(x => x.Attribute("name").Value == "shopFirstContactMobileNumber").First().Value;
-                    var fooshopFirstContactEmailAddress = shop.Elements().Where(x => x.Attribute("name").Value == "shopFirstContactEmailAddress").First().Value;
-                    var fooshopSecondContactMobileNumber = shop.Elements().Where(x => x.Attribute("name").Value == "shopSecondContactMobileNumber").First().Value;
-                    var fooshopSecondContactEmailAddress = shop.Elements().Where(x => x.Attribute("name").Value == "shopSecondContactEmailAddress").First().Value;
-                    var fooshopPreAuthorization = shop.Elements().Where(x => x.Attribute("name").Value == "shopPreAuthorization").First().Value;
-                    var fooshopTip = shop.Elements().Where(x => x.Attribute("name").Value == "shopTip").First().Value;
-                    var fooshopNumberOfActiveTerminals = shop.Elements().Where(x => x.Attribute("name").Value == "shopNumberOfActiveTerminals").First().Value;
-                    var fooshopFreeText = shop.Elements().Where(x => x.Attribute("name").Value == "shopFreeText").First().Value;
-                    var fooshopAddressType = shop.Elements().Where(x => x.Attribute("name").Value == "shopAddressType").First().Value;
-                    var fooshopStreet = shop.Elements().Where(x => x.Attribute("name").Value == "shopStreet").First().Value;
-                    var fooshopHouseNum = shop.Elements().Where(x => x.Attribute("name").Value == "shopHouseNum").First().Value;
-                    var fooshopProvinceCode = shop.Elements().Where(x => x.Attribute("name").Value == "shopProvinceCode").First().Value;
-                    var fooshopCity = shop.Elements().Where(x => x.Attribute("name").Value == "shopCity").First().Value;
-                    var fooshopCountry = shop.Elements().Where(x => x.Attribute("name").Value == "shopCountry").First().Value;
-                    var fooshopZip = shop.Elements().Where(x => x.Attribute("name").Value == "shopZip").First().Value;
-
-
-
                     var newShop = new Shop()
                     {
                         shopAcqCode = Convert.ToInt32(shop.Elements().Where(x => x.Attribute("name").Value == "shopAcqCode").First().Value),
@@ -152,20 +106,20 @@
                         shopContactPerson = shop.Elements().Where(x => x.Attribute("name").Value == "shopContactPerson").First().Value,
                         shopContactPersonFunction = shop.Elements().Where(x => x.Attribute("name").Value == "shopContactPersonFunction").First().Value,
                         shopAgentCode = shop.Elements().Where(x => x.Attribute("name").Value == "shopAgentCode").First().Value,
-                        shopRegisterNumber = Convert.ToInt32(shop.Elements().Where(x => x.Attribute("name").Value == "shopRegisterNumber").First().Value),
+                        shopRegisterNumber = int.TryParse(shop.Elements().Where(x => x.Attribute("name").Value == "shopRegisterNumber").First().Value, out int shopRegisterNumberInt) ? shopRegisterNumberInt : null,
                         shopRegisterProvince = shop.Elements().Where(x => x.Attribute("name").Value == "shopRegisterProvince").First().Value,
-                        shopMCC = Convert.ToInt32(shop.Elements().Where(x => x.Attribute("name").Value == "shopMCC").First().Value),
+                        shopMCC = int.TryParse(shop.Elements().Where(x => x.Attribute("name").Value == "shopMCC").First().Value, out int shopMCCInt) ? shopMCCInt : null,
                         shopEnablePAN = shop.Elements().Where(x => x.Attribute("name").Value == "shopEnablePAN").First().Value,
                         shopDefaultRefundFlag = shop.Elements().Where(x => x.Attribute("name").Value == "shopDefaultRefundFlag").First().Value,
                         shopDefaultAuthFlag = shop.Elements().Where(x => x.Attribute("name").Value == "shopDefaultAuthFlag").First().Value,
                         shopDefaultSignaturePin = shop.Elements().Where(x => x.Attribute("name").Value == "shopDefaultSignaturePin").First().Value,
-                        shopDefaultOfflineFloorLimit = Convert.ToInt32(shop.Elements().Where(x => x.Attribute("name").Value == "shopDefaultOfflineFloorLimit").First().Value),
-                        shopDefaultOfflineFloorCurrenc = Convert.ToInt32(shop.Elements().Where(x => x.Attribute("name").Value == "shopDefaultOfflineFloorCurrenc").First().Value),
-                        shopDefaultOfflineTipParameter = Convert.ToInt32(shop.Elements().Where(x => x.Attribute("name").Value == "shopDefaultOfflineTipParameter").First().Value),
-                        shopDefaultRandNum = Convert.ToInt32(shop.Elements().Where(x => x.Attribute("name").Value == "shopDefaultRandNum").First().Value),
+                        shopDefaultOfflineFloorLimit = int.TryParse(shop.Elements().Where(x => x.Attribute("name").Value == "shopDefaultOfflineFloorLimit").First().Value, out int shopDefaultOfflineFloorLimitInt) ? shopDefaultOfflineFloorLimitInt : null,
+                        shopDefaultOfflineFloorCurrenc = int.TryParse(shop.Elements().Where(x => x.Attribute("name").Value == "shopDefaultOfflineFloorCurrenc").First().Value, out int shopDefaultOfflineFloorCurrencInt) ? shopDefaultOfflineFloorCurrencInt : null,
+                        shopDefaultOfflineTipParameter = int.TryParse(shop.Elements().Where(x => x.Attribute("name").Value == "shopDefaultOfflineTipParameter").First().Value, out int shopDefaultOfflineTipParameterInt) ? shopDefaultOfflineTipParameterInt : null,
+                        shopDefaultRandNum = int.TryParse(shop.Elements().Where(x => x.Attribute("name").Value == "shopDefaultRandNum").First().Value, out int shopDefaultRandNumInt) ? shopDefaultRandNumInt : null,
                         shopDefaultOfflineKeyed = shop.Elements().Where(x => x.Attribute("name").Value == "shopDefaultOfflineKeyed").First().Value,
                         shopDefaultCATInd = shop.Elements().Where(x => x.Attribute("name").Value == "shopDefaultCATInd").First().Value,
-                        shopDefaultCATMaxNum = Convert.ToInt32(shop.Elements().Where(x => x.Attribute("name").Value == "shopDefaultCATMaxNum").First().Value),
+                        shopDefaultCATMaxNum = int.TryParse(shop.Elements().Where(x => x.Attribute("name").Value == "shopDefaultCATMaxNum").First().Value, out int shopDefaultCATMaxNumInt) ? shopDefaultCATMaxNumInt : null,
                         shopHotelReserv = shop.Elements().Where(x => x.Attribute("name").Value == "shopHotelReserv").First().Value,
                         shopQuasiCash = shop.Elements().Where(x => x.Attribute("name").Value == "shopQuasiCash").First().Value,
                         shopCash = shop.Elements().Where(x => x.Attribute("name").Value == "shopCash").First().Value,
@@ -211,10 +165,10 @@
         //      -   CustomersGrid's customers variable,
         //      -   ShopsGrid's shops variable
         //      -   TerminalsGrid's terminals variable
-        companies = await BindCompanies(xmlTree.Elements().Where(x=>x.Name.NamespaceName.ToString().Contains("company")).FirstOrDefault());
+        companies = await BindCompanies(xmlTree.Elements().Where(x => x.Name.NamespaceName.ToString().Contains("company")).FirstOrDefault());
 
-        shops = await BindShops(xmlTree.Elements().Where(x => x.Name.NamespaceName.ToString().Contains("shop")).FirstOrDefault());
+        // shops = await BindShops(xmlTree.Elements().Where(x => x.Name.NamespaceName.ToString().Contains("shop")).FirstOrDefault());
 
-        terminals = await BindTerminals(xmlTree.Elements().Where(x => x.Name.NamespaceName.ToString().Contains("terminal")).FirstOrDefault());
+        // terminals = await BindTerminals(xmlTree.Elements().Where(x => x.Name.NamespaceName.ToString().Contains("terminal")).FirstOrDefault());
     }
 }

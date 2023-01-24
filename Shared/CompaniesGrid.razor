@@ -1,0 +1,62 @@
+﻿@using OrdersReaderBlazorApp.Data;
+
+
+<Grid @ref="grid" TItem="Company" class="table table-hover table-bordered table-striped" DataProvider="CompaniesDataProvider" AllowFiltering="true" AllowPaging="true" PageSize="5" Responsive="true">
+    <GridColumn TItem="Company" HeaderText="companyAddressType" PropertyName="companyAddressType">
+        @context.companyAddressType
+    </GridColumn>
+    <GridColumn TItem="Company" HeaderText="companyCity" PropertyName="companyCity">
+        @context.companyCity
+    </GridColumn>
+</Grid>
+
+<!--
+<table>
+    @foreach (var item in companies)
+    {
+        <tr>
+            <td>@item.companyAcqCode</td>
+            <td>@item.companyAddressType</td>
+            <td>@item.companyCity</td>
+            <td>@item.companyContactPerson</td>
+            <td>@item.companyContactPersonFunction</td>
+            <td>@item.companyCountry</td>
+            <td>@item.companyHouseNum</td>
+            <td>@item.companyId</td>
+            <td>@item.companyName</td>
+            <td>@item.companyNickname</td>
+            <td>@item.companyProvinceCode</td>
+            <td>@item.companyStatus</td>
+        </tr>
+    }
+</table>
+-->
+
+<p>@foo</p>
+
+
+@code {
+
+
+    [Parameter]
+    public List<Company> companies { get; set; }
+
+    [Parameter]
+    public string foo { get; set; }
+
+    // ----
+
+    BlazorBootstrap.Grid<Company> grid;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+    private async Task<GridDataProviderResult<Company>> CompaniesDataProvider(GridDataProviderRequest<Company> request)
+    {
+        return await Task.FromResult(request.ApplyTo(companies));
+    }
+}
+
+

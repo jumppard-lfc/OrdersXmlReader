@@ -23,6 +23,10 @@
 
 @code {
 
+    [Parameter]
+    public List<Terminal> terminals { get; set; }
+
+    // ----
 
     BlazorBootstrap.Grid<Employee1> grid;
     private IEnumerable<Employee1> employees;
