@@ -10,8 +10,12 @@
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'http' " />
   <ItemGroup>
     <None Remove="Blazor.Bootstrap" />
+    <None Remove="XMLExamples\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Blazor.Bootstrap" Version="1.4.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="XMLExamples\" />
   </ItemGroup>
 </Project>
