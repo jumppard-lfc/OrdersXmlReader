@@ -1,0 +1,20 @@
+﻿@using OrdersReaderBlazorApp.Data;
+
+<table>
+    <tr>
+        <th>Shop ID</th>
+        <th>Shop Name</th>
+    </tr>
+    <tr>
+        <td>@shop.shopId</td>
+        <td>@shop.shopName</td>
+    </tr>   
+</table>
+
+@code {
+
+    [Parameter]
+    public Shop shop { get; set; }
+
+}
+

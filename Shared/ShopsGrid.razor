@@ -1,61 +1,39 @@
 ﻿@using OrdersReaderBlazorApp.Data;
 
-<h3>Shops</h3>
 
-<Grid @ref="grid" TItem="Employee1" class="table table-hover table-bordered table-striped" DataProvider="EmployeesDataProvider" AllowFiltering="true" Responsive="true">
-    <GridColumn TItem="Employee1" HeaderText="Id" PropertyName="Id">
-        @context.Id
+<Grid @ref="grid" TItem="Shop" class="table table-hover table-bordered table-striped" DataProvider="ShopsDataProvider" AllowFiltering="true" AllowPaging="true" PageSize="10" Responsive="true">
+    <GridColumn TItem="Shop" HeaderText="Shop Record Action" PropertyName="shopRecordAction">
+        @context.shopRecordAction
     </GridColumn>
-    <GridColumn TItem="Employee1" HeaderText="Employee Name" PropertyName="Name">
-        @context.Name
+    <GridColumn TItem="Shop" HeaderText="Shop Company ID" PropertyName="shopCompanyId">
+        @context.shopCompanyId
     </GridColumn>
-    <GridColumn TItem="Employee1" HeaderText="Designation" PropertyName="Designation">
-        @context.Designation
+    <GridColumn TItem="Shop" HeaderText="Shop ID" PropertyName="shopId">
+        @context.shopId
     </GridColumn>
-    <GridColumn TItem="Employee1" HeaderText="DOJ" PropertyName="DOJ">
-        @context.DOJ
-    </GridColumn>
-    <GridColumn TItem="Employee1" HeaderText="Active" PropertyName="IsActive">
-        @context.IsActive
+    <GridColumn TItem="Shop" HeaderText="Shop Name" PropertyName="shopName">
+        @context.shopName
+        <button class="btn btn-primary mb-3" onclick="showShopDetails(@context.shopAcqCode)" style="float: right;">Detail</button>
     </GridColumn>
 </Grid>
 
-
 @code {
+
 
     [Parameter]
     public List<Shop> shops { get; set; }
 
-    // ----
-
-    BlazorBootstrap.Grid<Employee1> grid;
-    private IEnumerable<Employee1> employees;
+    BlazorBootstrap.Grid<Shop> grid;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         await base.OnAfterRenderAsync(firstRender);
     }
 
-    private async Task<GridDataProviderResult<Employee1>> EmployeesDataProvider(GridDataProviderRequest<Employee1> request)
+    private async Task<GridDataProviderResult<Shop>> ShopsDataProvider(GridDataProviderRequest<Shop> request)
     {
-        if (employees is null) // pull employees only one time for client-side filtering, sorting, and paging
-            employees = GetEmployees(); // call a service or an API to pull the employees
-
-        return await Task.FromResult(request.ApplyTo(employees));
-    }
-
-    private IEnumerable<Employee1> GetEmployees()
-    {
-        return new List<Employee1>
-{
-            new Employee1 { Id = 108, Name = "Zayne", Designation = "Data Analyst", DOJ = new DateOnly(1991, 1, 1), IsActive = true },
-            new Employee1 { Id = 109, Name = "Isha", Designation = "App Maker", DOJ = new DateOnly(1996, 7, 1), IsActive = true },
-        };
+        return await Task.FromResult(request.ApplyTo(shops));
     }
 }
-
-
-
-
 
 

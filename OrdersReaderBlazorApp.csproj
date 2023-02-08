@@ -13,7 +13,7 @@
     <None Remove="XMLExamples\" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Blazor.Bootstrap" Version="1.4.0" />
+    <PackageReference Include="Blazor.Bootstrap" Version="1.4.3" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="XMLExamples\" />

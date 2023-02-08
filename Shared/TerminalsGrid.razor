@@ -1,61 +1,50 @@
 ﻿@using OrdersReaderBlazorApp.Data;
 
-<h3>Terminals</h3>
 
-<Grid @ref="grid" TItem="Employee1" class="table table-hover table-bordered table-striped" DataProvider="EmployeesDataProvider" AllowFiltering="true" Responsive="true">
-    <GridColumn TItem="Employee1" HeaderText="Id" PropertyName="Id">
-        @context.Id
+<Grid @ref="grid" TItem="Terminal" class="table table-hover table-bordered table-striped" DataProvider="TerminalsDataProvider" AllowFiltering="true" AllowPaging="true" PageSize="10" Responsive="true">
+    <GridColumn TItem="Terminal" HeaderText="Terminal Rec Action ID" PropertyName="terminalRecActionId">
+        @context.terminalRecActionId
     </GridColumn>
-    <GridColumn TItem="Employee1" HeaderText="Employee Name" PropertyName="Name">
-        @context.Name
+    <GridColumn TItem="Terminal" HeaderText="Terminal ID" PropertyName="terminalId">
+        @context.terminalId
     </GridColumn>
-    <GridColumn TItem="Employee1" HeaderText="Designation" PropertyName="Designation">
-        @context.Designation
+    <GridColumn TItem="Terminal" HeaderText="Terminal Company ID" PropertyName="terminalCompanyId">
+        @context.terminalCompanyId
     </GridColumn>
-    <GridColumn TItem="Employee1" HeaderText="DOJ" PropertyName="DOJ">
-        @context.DOJ
+    <GridColumn TItem="Terminal" HeaderText="Terminal Shop ID" PropertyName="terminalShopId">
+        @context.terminalShopId
     </GridColumn>
-    <GridColumn TItem="Employee1" HeaderText="Active" PropertyName="IsActive">
-        @context.IsActive
+    <GridColumn TItem="Terminal" HeaderText="Terminal ID" PropertyName="terminalId">
+        @context.terminalId
+    </GridColumn>
+    <GridColumn TItem="Terminal" HeaderText="Terminal Insertion Date" PropertyName="terminalInsertionDate">
+        @context.terminalInsertionDate
+    </GridColumn>
+    <GridColumn TItem="Terminal" HeaderText="Terminal Last Update Date" PropertyName="terminalLastUpdateDate">
+        @context.terminalLastUpdateDate
+    </GridColumn>
+    <GridColumn TItem="Terminal" HeaderText="Terminal Type" PropertyName="terminalType">
+        @context.terminalType
     </GridColumn>
 </Grid>
 
-
 @code {
+
 
     [Parameter]
     public List<Terminal> terminals { get; set; }
 
-    // ----
-
-    BlazorBootstrap.Grid<Employee1> grid;
-    private IEnumerable<Employee1> employees;
+    BlazorBootstrap.Grid<Terminal> grid;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         await base.OnAfterRenderAsync(firstRender);
     }
 
-    private async Task<GridDataProviderResult<Employee1>> EmployeesDataProvider(GridDataProviderRequest<Employee1> request)
+    private async Task<GridDataProviderResult<Terminal>> TerminalsDataProvider(GridDataProviderRequest<Terminal> request)
     {
-        if (employees is null) // pull employees only one time for client-side filtering, sorting, and paging
-            employees = GetEmployees(); // call a service or an API to pull the employees
-
-        return await Task.FromResult(request.ApplyTo(employees));
-    }
-
-    private IEnumerable<Employee1> GetEmployees()
-    {
-        return new List<Employee1>
-{
-            new Employee1 { Id = 102, Name = "Line", Designation = "Architect", DOJ = new DateOnly(1977, 1, 12), IsActive = true },
-            new Employee1 { Id = 101, Name = "Daniel", Designation = "Architect", DOJ = new DateOnly(1977, 1, 12), IsActive = true },
-            new Employee1 { Id = 108, Name = "Zayne", Designation = "Data Analyst", DOJ = new DateOnly(1991, 1, 1), IsActive = true },
-            new Employee1 { Id = 109, Name = "Isha", Designation = "App Maker", DOJ = new DateOnly(1996, 7, 1), IsActive = true },
-        };
+        return await Task.FromResult(request.ApplyTo(terminals));
     }
 }
-
-
 
 

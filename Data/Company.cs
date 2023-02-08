@@ -35,6 +35,8 @@ namespace OrdersReaderBlazorApp.Data
 		public string companyCountry { get; set; }
 		public string companyZip { get; set; }
 
+		public string companyAddress { get; set; } // companyStreet + companyHouseNum + companyZip + companyCity
+
         public Company() { }
     }
 }
