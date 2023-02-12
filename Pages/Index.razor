@@ -12,20 +12,15 @@
 
 <!-- Display XML file's content (customers, shops, terminal) -->
 <CompaniesGrid companies="@companies" />
-<ShopsGrid shops="@shops" />
+<ShopsGrid shops="@shops" shopDetails="@shopDetails" />
 <TerminalsGrid terminals="@terminals" />
-<!-- <ShopDetails shop="@shop" /> -->
 
 @code{
-
-    /*
-    [Parameter]
-    public Shop shop { get; set; }
-    */
 
     private List<Company> companies = new List<Company>();
     private List<Shop> shops = new List<Shop>();
     private List<Terminal> terminals = new List<Terminal>();
+    public Data.ShopDetails shopDetails = new Data.ShopDetails();
 
     private async Task ReadFile(InputFileChangeEventArgs e)
     {
@@ -226,12 +221,5 @@
         shops = await BindShops(xmlTree.Elements().Where(x => x.Name.NamespaceName.ToString().Contains("shop")).FirstOrDefault());
         terminals = await BindTerminals(xmlTree.Elements().Where(x => x.Name.NamespaceName.ToString().Contains("terminal")).FirstOrDefault());
     }
-
-    // this method is called in onclick event on "Detail" button in Shops grid
-    /*
-        void showShopDetails(int shopAcqCode)
-    {
-        shopAcqCodeParam = shopAcqCode;
-    }
-    */
+    
 }

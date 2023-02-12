@@ -1,5 +1,63 @@
 ﻿@using OrdersReaderBlazorApp.Data;
 
+<Modal @ref="modal" Title="Merchant Info" Size="ModalSize.Large">
+    <BodyTemplate>
+        <table>
+            <tr>
+                <td colspan="2"><b>Merchant ID: </b></td>
+                <td>@shopDetails.merchantID</td>
+            </tr>
+            <tr>
+                <td colspan="2"><b>Chain: </b></td>
+                <td>@shopDetails.chain</td>
+            </tr>
+            <tr>
+                <td colspan="2"><b>Name: </b></td>
+                <td>@shopDetails.name</td>
+            </tr>
+            <tr>
+                <td colspan="2"><b>Street Address: </b></td>
+                <td>@shopDetails.streetAddress</td>
+            </tr>
+            <tr>
+                <td colspan="2"><b>Town: </b></td>
+                <td>@shopDetails.town</td>
+            </tr>
+            <tr>
+                <td colspan="2"><b>Post Code: </b></td>
+                <td>@shopDetails.postCode</td>
+            </tr>
+            <tr>
+                <td colspan="2"><b>Phone: </b></td>
+                <td>@shopDetails.phone1</td>
+                <td>@shopDetails.phone2</td>
+            </tr>
+            <tr>
+                <td colspan="2"><b>Email: </b></td>
+                <td>@shopDetails.emails</td>
+            </tr>
+            <tr>
+                <td colspan="2"><b>Contact: </b></td>
+                <td>@shopDetails.contact</td>
+            </tr>
+            <tr>
+                <td colspan="2"><b>ShopFreeText: </b></td>
+                <td>@shopDetails.shopFreeText</td>
+            </tr>
+            <tr>
+                <td colspan="2"><b>MCC: </b></td>
+                <td>@shopDetails.mcc</td>
+            </tr>
+            <tr>
+                <td colspan="2"><b>Action: </b></td>
+                <td>@shopDetails.action</td>
+            </tr>
+        </table>
+    </BodyTemplate>
+    <FooterTemplate>
+        <Button Color="ButtonColor.Secondary" @onclick="OnHideModalClick">Close</Button>
+    </FooterTemplate>
+</Modal>
 
 <Grid @ref="grid" TItem="Shop" class="table table-hover table-bordered table-striped" DataProvider="ShopsDataProvider" AllowFiltering="true" AllowPaging="true" PageSize="10" Responsive="true">
     <GridColumn TItem="Shop" HeaderText="Shop Record Action" PropertyName="shopRecordAction">
@@ -13,7 +71,7 @@
     </GridColumn>
     <GridColumn TItem="Shop" HeaderText="Shop Name" PropertyName="shopName">
         @context.shopName
-        <button class="btn btn-primary mb-3" onclick="showShopDetails(@context.shopAcqCode)" style="float: right;">Detail</button>
+        <button class="btn btn-primary mb-3" @onclick="() => OnShowModalClick(context.shopId)" style="float: right;">Detail</button>
     </GridColumn>
 </Grid>
 
@@ -22,6 +80,9 @@
 
     [Parameter]
     public List<Shop> shops { get; set; }
+
+    [Parameter]
+    public Data.ShopDetails shopDetails { get; set; }
 
     BlazorBootstrap.Grid<Shop> grid;
 
@@ -33,6 +94,36 @@
     private async Task<GridDataProviderResult<Shop>> ShopsDataProvider(GridDataProviderRequest<Shop> request)
     {
         return await Task.FromResult(request.ApplyTo(shops));
+    }
+
+    void showShopDetails(string shopId)
+    {
+        shopDetails = new Data.ShopDetails();
+
+        shopDetails.merchantID = shops.Where(x => x.shopId == shopId).First().shopId;
+        shopDetails.chain = shops.Where(x => x.shopId == shopId).First().shopCompanyId;
+        shopDetails.name = shops.Where(x => x.shopId == shopId).First().shopName;
+        shopDetails.streetAddress = shops.Where(x => x.shopId == shopId).First().shopStreet + ", " + shops.Where(x => x.shopId == shopId).First().shopHouseNum;
+        shopDetails.town = shops.Where(x => x.shopId == shopId).First().shopCity;
+        shopDetails.postCode = shops.Where(x => x.shopId == shopId).First().shopZip;
+        shopDetails.phone1 = shops.Where(x => x.shopId == shopId).First().shopFirstContactMobileNumber;
+        shopDetails.phone2 = shops.Where(x => x.shopId == shopId).First().shopSecondContactMobileNumber;
+        shopDetails.emails = shops.Where(x => x.shopId == shopId).First().shopFirstContactEmailAddress + shops.Where(x => x.shopId == shopId).First().shopSecondContactEmailAddress;
+        shopDetails.contact = shops.Where(x => x.shopId == shopId).First().shopContactPerson;
+        shopDetails.shopFreeText = shops.Where(x => x.shopId == shopId).First().shopFreeText;
+        shopDetails.mcc = shops.Where(x => x.shopId == shopId).First().shopMCC == null ? "" : shops.Where(x => x.shopId == shopId).First().shopMCC.ToString();
+        shopDetails.action = shops.Where(x => x.shopId == shopId).First().shopRecordAction;
+    }
+
+    private Modal modal;
+    private async Task OnShowModalClick(string shopId)
+    {
+        showShopDetails(shopId);
+        await modal?.ShowAsync();
+    }
+    private async Task OnHideModalClick()
+    {
+        await modal?.HideAsync();
     }
 }
 
