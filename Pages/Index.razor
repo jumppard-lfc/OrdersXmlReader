@@ -11,9 +11,18 @@
 <InputFile id="flpicker" OnChange="@ReadFile" hidden />
 
 <!-- Display XML file's content (customers, shops, terminal) -->
-<CompaniesGrid companies="@companies" />
-<ShopsGrid shops="@shops" shopDetails="@shopDetails" />
-<TerminalsGrid terminals="@terminals" />
+@if (string.IsNullOrEmpty(warning))
+{
+    <CompaniesGrid companies="@companies" />
+    <ShopsGrid shops="@shops" shopDetails="@shopDetails" />
+    <TerminalsGrid terminals="@terminals" />
+} else
+{
+    <Callout Type="CalloutType.Warning">
+        <strong>@warning</strong>
+    </Callout>
+}
+
 
 @code{
 
@@ -21,6 +30,7 @@
     private List<Shop> shops = new List<Shop>();
     private List<Terminal> terminals = new List<Terminal>();
     public Data.ShopDetails shopDetails = new Data.ShopDetails();
+    public string warning = "";
 
     private async Task ReadFile(InputFileChangeEventArgs e)
     {
@@ -28,21 +38,20 @@
         {
             var xmlFileString = await new StreamReader(e.File.OpenReadStream(e.File.Size)).ReadToEndAsync();
 
-            // todo 1) parse XML and bind it to
-            //          -   CustomersGrid's customers variable,
-            //          -   ShopsGrid's shops variable
-            //          -   TerminalsGrid's terminals variable
+            // 1) parse XML and bind it to
+            //      -   CustomersGrid's customers variable,
+            //      -   ShopsGrid's shops variable
+            //      -   TerminalsGrid's terminals variable
             await BindXml(XElement.Parse(xmlFileString));
         }
         else
         {
-            // todo print BlazorBootstrap's error/warning popup "Unsupported file. Selected file must be XML!"
+            warning = "You must pick a XML file! Please try again.";
         }
     }
 
     private async Task BindXml(XElement xmlTree)
     {
-
         async Task<List<Company>> BindCompanies(XElement? companiesXml)
         {
             List<Company> bindedCompanies = new List<Company>();
@@ -221,5 +230,5 @@
         shops = await BindShops(xmlTree.Elements().Where(x => x.Name.NamespaceName.ToString().Contains("shop")).FirstOrDefault());
         terminals = await BindTerminals(xmlTree.Elements().Where(x => x.Name.NamespaceName.ToString().Contains("terminal")).FirstOrDefault());
     }
-    
+
 }
