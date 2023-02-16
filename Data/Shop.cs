@@ -105,6 +105,9 @@ namespace OrdersReaderBlazorApp.Data
         public string shopCity { get; set; }
         public string shopCountry { get; set; }
         public string shopZip { get; set; }
+
+        // custom order helper field
+        public string shopRecordActionOrderHelper { get; set; }
     }
 }
 

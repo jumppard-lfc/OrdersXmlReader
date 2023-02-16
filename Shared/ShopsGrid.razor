@@ -60,7 +60,7 @@
 </Modal>
 
 <Grid @ref="grid" TItem="Shop" class="table table-hover table-bordered table-striped" DataProvider="ShopsDataProvider" AllowFiltering="true" AllowPaging="true" PageSize="10" Responsive="true" AllowSorting="true">
-    <GridColumn TItem="Shop" HeaderText="Shop Record Action" PropertyName="shopRecordAction" SortKeySelector="@(item => item.shopRecordAction)" IsDefaultSortColumn="true" SortDirection="SortDirection.Ascending">
+    <GridColumn TItem="Shop" HeaderText="Shop Record Action" PropertyName="shopRecordAction" SortKeySelector="@(item => item.shopRecordActionOrderHelper)" IsDefaultSortColumn="true" SortDirection="SortDirection.Ascending">
         @context.shopRecordAction
     </GridColumn>
     <GridColumn TItem="Shop" HeaderText="Shop Company ID" PropertyName="shopCompanyId">

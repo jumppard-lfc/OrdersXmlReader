@@ -26,193 +26,242 @@
 
 @code{
 
-    private List<Company> companies = new List<Company>();
-    private List<Shop> shops = new List<Shop>();
-    private List<Terminal> terminals = new List<Terminal>();
-    public Data.ShopDetails shopDetails = new Data.ShopDetails();
-    public string warning = "";
+        private List<Company> companies = new List<Company>();
+        private List<Shop> shops = new List<Shop>();
+        private List<Terminal> terminals = new List<Terminal>();
+        public Data.ShopDetails shopDetails = new Data.ShopDetails();
+        public string warning = "";
 
-    private async Task ReadFile(InputFileChangeEventArgs e)
-    {
-        if (e.File.ContentType == "text/xml")
+        private async Task ReadFile(InputFileChangeEventArgs e)
         {
-            var xmlFileString = await new StreamReader(e.File.OpenReadStream(e.File.Size)).ReadToEndAsync();
-
-            // 1) parse XML and bind it to
-            //      -   CustomersGrid's customers variable,
-            //      -   ShopsGrid's shops variable
-            //      -   TerminalsGrid's terminals variable
-            await BindXml(XElement.Parse(xmlFileString));
-        }
-        else
-        {
-            warning = "You must pick a XML file! Please try again.";
-        }
-    }
-
-    private async Task BindXml(XElement xmlTree)
-    {
-        async Task<List<Company>> BindCompanies(XElement? companiesXml)
-        {
-            List<Company> bindedCompanies = new List<Company>();
-            if (companiesXml != null)
+            if (e.File.ContentType == "text/xml")
             {
-                var companies = companiesXml.Elements().Where(x => x.Name.LocalName.ToString() == "GMFRecord").ToList();
-                foreach (var company in companies)
+                var xmlFileString = await new StreamReader(e.File.OpenReadStream(e.File.Size)).ReadToEndAsync();
+
+                // 1) parse XML and bind it to
+                //      -   CustomersGrid's customers variable,
+                //      -   ShopsGrid's shops variable
+                //      -   TerminalsGrid's terminals variable
+                await BindXml(XElement.Parse(xmlFileString));
+            }
+            else
+            {
+                warning = "You must pick a XML file! Please try again.";
+            }
+        }
+
+        private async Task BindXml(XElement xmlTree)
+        {
+            async Task<List<Company>> BindCompanies(XElement? companiesXml)
+            {
+                List<Company> bindedCompanies = new List<Company>();
+                if (companiesXml != null)
                 {
-                    var newCompany = new Company()
+                    var companies = companiesXml.Elements().Where(x => x.Name.LocalName.ToString() == "GMFRecord").ToList();
+                    foreach (var company in companies)
                     {
-                        companyAcqCode = Convert.ToInt32(company.Elements().Where(x => x.Attribute("name").Value == "companyAcqCode").First().Value),
-                        companyAddressType = company.Elements().Where(x => x.Attribute("name").Value == "companyAddressType").First().Value,
-                        companyCity = company.Elements().Where(x => x.Attribute("name").Value == "companyCity").First().Value,
-                        companyContactPerson = company.Elements().Where(x => x.Attribute("name").Value == "companyContactPerson").First().Value,
-                        companyContactPersonFunction = company.Elements().Where(x => x.Attribute("name").Value == "companyContactPersonFunction").First().Value,
-                        companyCountry = company.Elements().Where(x => x.Attribute("name").Value == "companyCountry").First().Value,
-                        companyHouseNum = company.Elements().Where(x => x.Attribute("name").Value == "companyHouseNum").First().Value,
-                        companyId = company.Elements().Where(x => x.Attribute("name").Value == "companyId").First().Value,
-                        companyName = company.Elements().Where(x => x.Attribute("name").Value == "companyName").First().Value,
-                        companyNickname = company.Elements().Where(x => x.Attribute("name").Value == "companyNickname").First().Value,
-                        companyProvinceCode = company.Elements().Where(x => x.Attribute("name").Value == "companyProvinceCode").First().Value,
-                        companyStatus = company.Elements().Where(x => x.Attribute("name").Value == "companyStatus").First().Value,
-                        companyStreet = company.Elements().Where(x => x.Attribute("name").Value == "companyStreet").First().Value,
-                        companyZip = company.Elements().Where(x => x.Attribute("name").Value == "companyZip").First().Value,
-                    };
+                        var newCompany = new Company()
+                        {
+                            companyAcqCode = Convert.ToInt32(company.Elements().Where(x => x.Attribute("name").Value == "companyAcqCode").First().Value),
+                            companyAddressType = company.Elements().Where(x => x.Attribute("name").Value == "companyAddressType").First().Value,
+                            companyCity = company.Elements().Where(x => x.Attribute("name").Value == "companyCity").First().Value,
+                            companyContactPerson = company.Elements().Where(x => x.Attribute("name").Value == "companyContactPerson").First().Value,
+                            companyContactPersonFunction = company.Elements().Where(x => x.Attribute("name").Value == "companyContactPersonFunction").First().Value,
+                            companyCountry = company.Elements().Where(x => x.Attribute("name").Value == "companyCountry").First().Value,
+                            companyHouseNum = company.Elements().Where(x => x.Attribute("name").Value == "companyHouseNum").First().Value,
+                            companyId = company.Elements().Where(x => x.Attribute("name").Value == "companyId").First().Value,
+                            companyName = company.Elements().Where(x => x.Attribute("name").Value == "companyName").First().Value,
+                            companyNickname = company.Elements().Where(x => x.Attribute("name").Value == "companyNickname").First().Value,
+                            companyProvinceCode = company.Elements().Where(x => x.Attribute("name").Value == "companyProvinceCode").First().Value,
+                            companyStatus = company.Elements().Where(x => x.Attribute("name").Value == "companyStatus").First().Value,
+                            companyStreet = company.Elements().Where(x => x.Attribute("name").Value == "companyStreet").First().Value,
+                            companyZip = company.Elements().Where(x => x.Attribute("name").Value == "companyZip").First().Value,
+                        };
 
-                    newCompany.companyAddress = newCompany.companyStreet + ", " + newCompany.companyHouseNum + ", " + newCompany.companyZip + ", " + newCompany.companyCity;
+                        newCompany.companyAddress = newCompany.companyStreet + ", " + newCompany.companyHouseNum + ", " + newCompany.companyZip + ", " + newCompany.companyCity;
 
-                    bindedCompanies.Add(newCompany);
+                        bindedCompanies.Add(newCompany);
+                    }
                 }
+
+                return bindedCompanies;
             }
 
-            return bindedCompanies;
-        }
-
-        async Task<List<Shop>> BindShops(XElement? shopsXml)
-        {
-            var bindedShops = new List<Shop>();
-
-            if (shopsXml != null)
+            async Task<List<Shop>> BindShops(XElement? shopsXml)
             {
-                var shops = shopsXml.Elements().Where(x => x.Name.LocalName.ToString() == "GMFRecord").ToList();
-                foreach (var shop in shops)
+                var bindedShops = new List<Shop>();
+
+                if (shopsXml != null)
                 {
-
-                    var newShop = new Shop()
+                    var shops = shopsXml.Elements().Where(x => x.Name.LocalName.ToString() == "GMFRecord").ToList();
+                    foreach (var shop in shops)
                     {
-                        shopAcqCode = Convert.ToInt32(shop.Elements().Where(x => x.Attribute("name").Value == "shopAcqCode").First().Value),
-                        shopCompanyId = shop.Elements().Where(x => x.Attribute("name").Value == "shopCompanyId").First().Value,
-                        shopId = shop.Elements().Where(x => x.Attribute("name").Value == "shopId").First().Value,
-                        shopRecordAction = shop.Elements().Where(x => x.Attribute("name").Value == "shopRecordAction").First().Value,
-                        shopName = shop.Elements().Where(x => x.Attribute("name").Value == "shopName").First().Value,
-                        shopStatus = shop.Elements().Where(x => x.Attribute("name").Value == "shopStatus").First().Value,
-                        shopContactPerson = shop.Elements().Where(x => x.Attribute("name").Value == "shopContactPerson").First().Value,
-                        shopContactPersonFunction = shop.Elements().Where(x => x.Attribute("name").Value == "shopContactPersonFunction").First().Value,
-                        shopAgentCode = shop.Elements().Where(x => x.Attribute("name").Value == "shopAgentCode").First().Value,
-                        shopRegisterNumber = int.TryParse(shop.Elements().Where(x => x.Attribute("name").Value == "shopRegisterNumber").First().Value, out int shopRegisterNumberInt) ? shopRegisterNumberInt : null,
-                        shopRegisterProvince = shop.Elements().Where(x => x.Attribute("name").Value == "shopRegisterProvince").First().Value,
-                        shopMCC = int.TryParse(shop.Elements().Where(x => x.Attribute("name").Value == "shopMCC").First().Value, out int shopMCCInt) ? shopMCCInt : null,
-                        shopEnablePAN = shop.Elements().Where(x => x.Attribute("name").Value == "shopEnablePAN").First().Value,
-                        shopDefaultRefundFlag = shop.Elements().Where(x => x.Attribute("name").Value == "shopDefaultRefundFlag").First().Value,
-                        shopDefaultAuthFlag = shop.Elements().Where(x => x.Attribute("name").Value == "shopDefaultAuthFlag").First().Value,
-                        shopDefaultSignaturePin = shop.Elements().Where(x => x.Attribute("name").Value == "shopDefaultSignaturePin").First().Value,
-                        shopDefaultOfflineFloorLimit = int.TryParse(shop.Elements().Where(x => x.Attribute("name").Value == "shopDefaultOfflineFloorLimit").First().Value, out int shopDefaultOfflineFloorLimitInt) ? shopDefaultOfflineFloorLimitInt : null,
-                        shopDefaultOfflineFloorCurrenc = int.TryParse(shop.Elements().Where(x => x.Attribute("name").Value == "shopDefaultOfflineFloorCurrenc").First().Value, out int shopDefaultOfflineFloorCurrencInt) ? shopDefaultOfflineFloorCurrencInt : null,
-                        shopDefaultOfflineTipParameter = int.TryParse(shop.Elements().Where(x => x.Attribute("name").Value == "shopDefaultOfflineTipParameter").First().Value, out int shopDefaultOfflineTipParameterInt) ? shopDefaultOfflineTipParameterInt : null,
-                        shopDefaultRandNum = int.TryParse(shop.Elements().Where(x => x.Attribute("name").Value == "shopDefaultRandNum").First().Value, out int shopDefaultRandNumInt) ? shopDefaultRandNumInt : null,
-                        shopDefaultOfflineKeyed = shop.Elements().Where(x => x.Attribute("name").Value == "shopDefaultOfflineKeyed").First().Value,
-                        shopDefaultCATInd = shop.Elements().Where(x => x.Attribute("name").Value == "shopDefaultCATInd").First().Value,
-                        shopDefaultCATMaxNum = int.TryParse(shop.Elements().Where(x => x.Attribute("name").Value == "shopDefaultCATMaxNum").First().Value, out int shopDefaultCATMaxNumInt) ? shopDefaultCATMaxNumInt : null,
-                        shopHotelReserv = shop.Elements().Where(x => x.Attribute("name").Value == "shopHotelReserv").First().Value,
-                        shopQuasiCash = shop.Elements().Where(x => x.Attribute("name").Value == "shopQuasiCash").First().Value,
-                        shopCash = shop.Elements().Where(x => x.Attribute("name").Value == "shopCash").First().Value,
-                        shopTurnoverLetterFlag = shop.Elements().Where(x => x.Attribute("name").Value == "shopTurnoverLetterFlag").First().Value,
-                        shopAggrCode = shop.Elements().Where(x => x.Attribute("name").Value == "shopAggrCode").First().Value,
-                        shopGeoSectorCode = shop.Elements().Where(x => x.Attribute("name").Value == "shopGeoSectorCode").First().Value,
-                        shopStatementType = shop.Elements().Where(x => x.Attribute("name").Value == "shopStatementType").First().Value,
-                        shopStatementCycle = shop.Elements().Where(x => x.Attribute("name").Value == "shopStatementCycle").First().Value,
-                        shopAdmContacPerson = shop.Elements().Where(x => x.Attribute("name").Value == "shopAdmContacPerson").First().Value,
-                        shopAdmTitleOfThePerson = shop.Elements().Where(x => x.Attribute("name").Value == "shopAdmTitleOfThePerson").First().Value,
-                        shopNickname = shop.Elements().Where(x => x.Attribute("name").Value == "shopNickname").First().Value,
-                        shopFirstContactMobileNumber = shop.Elements().Where(x => x.Attribute("name").Value == "shopFirstContactMobileNumber").First().Value,
-                        shopFirstContactEmailAddress = shop.Elements().Where(x => x.Attribute("name").Value == "shopFirstContactEmailAddress").First().Value,
-                        shopSecondContactMobileNumber = shop.Elements().Where(x => x.Attribute("name").Value == "shopSecondContactMobileNumber").First().Value,
-                        shopSecondContactEmailAddress = shop.Elements().Where(x => x.Attribute("name").Value == "shopSecondContactEmailAddress").First().Value,
-                        shopPreAuthorization = shop.Elements().Where(x => x.Attribute("name").Value == "shopPreAuthorization").First().Value,
-                        shopTip = shop.Elements().Where(x => x.Attribute("name").Value == "shopTip").First().Value,
-                        shopNumberOfActiveTerminals = shop.Elements().Where(x => x.Attribute("name").Value == "shopNumberOfActiveTerminals").First().Value,
-                        shopFreeText = shop.Elements().Where(x => x.Attribute("name").Value == "shopFreeText").First().Value,
-                        shopAddressType = shop.Elements().Where(x => x.Attribute("name").Value == "shopAddressType").First().Value,
-                        shopStreet = shop.Elements().Where(x => x.Attribute("name").Value == "shopStreet").First().Value,
-                        shopHouseNum = shop.Elements().Where(x => x.Attribute("name").Value == "shopHouseNum").First().Value,
-                        shopProvinceCode = shop.Elements().Where(x => x.Attribute("name").Value == "shopProvinceCode").First().Value,
-                        shopCity = shop.Elements().Where(x => x.Attribute("name").Value == "shopCity").First().Value,
-                        shopCountry = shop.Elements().Where(x => x.Attribute("name").Value == "shopCountry").First().Value,
-                        shopZip = shop.Elements().Where(x => x.Attribute("name").Value == "shopZip").First().Value,
-                    };
+                        // custom order by non-visible shopRecordActionOrderHelper property
+                        var shopRecordAction = shop.Elements().Where(x => x.Attribute("name").Value == "shopRecordAction").First().Value;
+                        var shopRecordActionOrderHelper = "";
+                        switch (shopRecordAction)
+                        {
+                            case "S":
+                                shopRecordActionOrderHelper = "A";
+                                break;
+                            case "D":
+                                shopRecordActionOrderHelper = "B";
+                                break;
+                            case "U":
+                                shopRecordActionOrderHelper = "C";
+                                break;
+                            case "N":
+                                shopRecordActionOrderHelper = "D";
+                                break;
+                            default:
+                                break;
+                        }
 
-                    bindedShops.Add(newShop);
+                        // data binding
+                        var newShop = new Shop()
+                        {
+                            shopAcqCode = Convert.ToInt32(shop.Elements().Where(x => x.Attribute("name").Value == "shopAcqCode").First().Value),
+                            shopCompanyId = shop.Elements().Where(x => x.Attribute("name").Value == "shopCompanyId").First().Value,
+                            shopId = shop.Elements().Where(x => x.Attribute("name").Value == "shopId").First().Value,
+                            shopRecordAction = shop.Elements().Where(x => x.Attribute("name").Value == "shopRecordAction").First().Value,
+                            shopName = shop.Elements().Where(x => x.Attribute("name").Value == "shopName").First().Value,
+                            shopStatus = shop.Elements().Where(x => x.Attribute("name").Value == "shopStatus").First().Value,
+                            shopContactPerson = shop.Elements().Where(x => x.Attribute("name").Value == "shopContactPerson").First().Value,
+                            shopContactPersonFunction = shop.Elements().Where(x => x.Attribute("name").Value == "shopContactPersonFunction").First().Value,
+                            shopAgentCode = shop.Elements().Where(x => x.Attribute("name").Value == "shopAgentCode").First().Value,
+                            shopRegisterNumber = int.TryParse(shop.Elements().Where(x => x.Attribute("name").Value == "shopRegisterNumber").First().Value, out int shopRegisterNumberInt) ? shopRegisterNumberInt : null,
+                            shopRegisterProvince = shop.Elements().Where(x => x.Attribute("name").Value == "shopRegisterProvince").First().Value,
+                            shopMCC = int.TryParse(shop.Elements().Where(x => x.Attribute("name").Value == "shopMCC").First().Value, out int shopMCCInt) ? shopMCCInt : null,
+                            shopEnablePAN = shop.Elements().Where(x => x.Attribute("name").Value == "shopEnablePAN").First().Value,
+                            shopDefaultRefundFlag = shop.Elements().Where(x => x.Attribute("name").Value == "shopDefaultRefundFlag").First().Value,
+                            shopDefaultAuthFlag = shop.Elements().Where(x => x.Attribute("name").Value == "shopDefaultAuthFlag").First().Value,
+                            shopDefaultSignaturePin = shop.Elements().Where(x => x.Attribute("name").Value == "shopDefaultSignaturePin").First().Value,
+                            shopDefaultOfflineFloorLimit = int.TryParse(shop.Elements().Where(x => x.Attribute("name").Value == "shopDefaultOfflineFloorLimit").First().Value, out int shopDefaultOfflineFloorLimitInt) ? shopDefaultOfflineFloorLimitInt : null,
+                            shopDefaultOfflineFloorCurrenc = int.TryParse(shop.Elements().Where(x => x.Attribute("name").Value == "shopDefaultOfflineFloorCurrenc").First().Value, out int shopDefaultOfflineFloorCurrencInt) ? shopDefaultOfflineFloorCurrencInt : null,
+                            shopDefaultOfflineTipParameter = int.TryParse(shop.Elements().Where(x => x.Attribute("name").Value == "shopDefaultOfflineTipParameter").First().Value, out int shopDefaultOfflineTipParameterInt) ? shopDefaultOfflineTipParameterInt : null,
+                            shopDefaultRandNum = int.TryParse(shop.Elements().Where(x => x.Attribute("name").Value == "shopDefaultRandNum").First().Value, out int shopDefaultRandNumInt) ? shopDefaultRandNumInt : null,
+                            shopDefaultOfflineKeyed = shop.Elements().Where(x => x.Attribute("name").Value == "shopDefaultOfflineKeyed").First().Value,
+                            shopDefaultCATInd = shop.Elements().Where(x => x.Attribute("name").Value == "shopDefaultCATInd").First().Value,
+                            shopDefaultCATMaxNum = int.TryParse(shop.Elements().Where(x => x.Attribute("name").Value == "shopDefaultCATMaxNum").First().Value, out int shopDefaultCATMaxNumInt) ? shopDefaultCATMaxNumInt : null,
+                            shopHotelReserv = shop.Elements().Where(x => x.Attribute("name").Value == "shopHotelReserv").First().Value,
+                            shopQuasiCash = shop.Elements().Where(x => x.Attribute("name").Value == "shopQuasiCash").First().Value,
+                            shopCash = shop.Elements().Where(x => x.Attribute("name").Value == "shopCash").First().Value,
+                            shopTurnoverLetterFlag = shop.Elements().Where(x => x.Attribute("name").Value == "shopTurnoverLetterFlag").First().Value,
+                            shopAggrCode = shop.Elements().Where(x => x.Attribute("name").Value == "shopAggrCode").First().Value,
+                            shopGeoSectorCode = shop.Elements().Where(x => x.Attribute("name").Value == "shopGeoSectorCode").First().Value,
+                            shopStatementType = shop.Elements().Where(x => x.Attribute("name").Value == "shopStatementType").First().Value,
+                            shopStatementCycle = shop.Elements().Where(x => x.Attribute("name").Value == "shopStatementCycle").First().Value,
+                            shopAdmContacPerson = shop.Elements().Where(x => x.Attribute("name").Value == "shopAdmContacPerson").First().Value,
+                            shopAdmTitleOfThePerson = shop.Elements().Where(x => x.Attribute("name").Value == "shopAdmTitleOfThePerson").First().Value,
+                            shopNickname = shop.Elements().Where(x => x.Attribute("name").Value == "shopNickname").First().Value,
+                            shopFirstContactMobileNumber = shop.Elements().Where(x => x.Attribute("name").Value == "shopFirstContactMobileNumber").First().Value,
+                            shopFirstContactEmailAddress = shop.Elements().Where(x => x.Attribute("name").Value == "shopFirstContactEmailAddress").First().Value,
+                            shopSecondContactMobileNumber = shop.Elements().Where(x => x.Attribute("name").Value == "shopSecondContactMobileNumber").First().Value,
+                            shopSecondContactEmailAddress = shop.Elements().Where(x => x.Attribute("name").Value == "shopSecondContactEmailAddress").First().Value,
+                            shopPreAuthorization = shop.Elements().Where(x => x.Attribute("name").Value == "shopPreAuthorization").First().Value,
+                            shopTip = shop.Elements().Where(x => x.Attribute("name").Value == "shopTip").First().Value,
+                            shopNumberOfActiveTerminals = shop.Elements().Where(x => x.Attribute("name").Value == "shopNumberOfActiveTerminals").First().Value,
+                            shopFreeText = shop.Elements().Where(x => x.Attribute("name").Value == "shopFreeText").First().Value,
+                            shopAddressType = shop.Elements().Where(x => x.Attribute("name").Value == "shopAddressType").First().Value,
+                            shopStreet = shop.Elements().Where(x => x.Attribute("name").Value == "shopStreet").First().Value,
+                            shopHouseNum = shop.Elements().Where(x => x.Attribute("name").Value == "shopHouseNum").First().Value,
+                            shopProvinceCode = shop.Elements().Where(x => x.Attribute("name").Value == "shopProvinceCode").First().Value,
+                            shopCity = shop.Elements().Where(x => x.Attribute("name").Value == "shopCity").First().Value,
+                            shopCountry = shop.Elements().Where(x => x.Attribute("name").Value == "shopCountry").First().Value,
+                            shopZip = shop.Elements().Where(x => x.Attribute("name").Value == "shopZip").First().Value,
+                            shopRecordActionOrderHelper = shopRecordActionOrderHelper,
+                        };
+
+                        bindedShops.Add(newShop);
+                    }
                 }
+
+
+
+
+                return bindedShops;
             }
 
-            return bindedShops;
-        }
-
-        async Task<List<Terminal>> BindTerminals(XElement? terminalsXml)
-        {
-            List<Terminal> bindedTerminals = new List<Terminal>();
-            if (terminalsXml != null)
+            async Task<List<Terminal>> BindTerminals(XElement? terminalsXml)
             {
-                var terminals = terminalsXml.Elements().Where(x => x.Name.LocalName.ToString() == "GMFRecord").ToList();
-                foreach (var terminal in terminals)
+                List<Terminal> bindedTerminals = new List<Terminal>();
+                if (terminalsXml != null)
                 {
-                    var newTerminal = new Terminal()
+                    var terminals = terminalsXml.Elements().Where(x => x.Name.LocalName.ToString() == "GMFRecord").ToList();
+                    foreach (var terminal in terminals)
                     {
-                        terminalAcqCode = Convert.ToInt32(terminal.Elements().Where(x => x.Attribute("name").Value == "terminalAcqCode").First().Value),
-                        terminalCompanyId = terminal.Elements().Where(x => x.Attribute("name").Value == "terminalCompanyId").First().Value,
-                        terminalShopId = terminal.Elements().Where(x => x.Attribute("name").Value == "terminalShopId").First().Value,
-                        terminalId = terminal.Elements().Where(x => x.Attribute("name").Value == "terminalId").First().Value,
-                        terminalRecActionId = terminal.Elements().Where(x => x.Attribute("name").Value == "terminalRecActionId").First().Value,
-                        terminalPhysicalTerminalId = terminal.Elements().Where(x => x.Attribute("name").Value == "terminalPhysicalTerminalId").First().Value,
-                        terminalType = terminal.Elements().Where(x => x.Attribute("name").Value == "terminalType").First().Value,
-                        terminalEquipmentType = terminal.Elements().Where(x => x.Attribute("name").Value == "terminalEquipmentType").First().Value,
-                        terminalContactPerson = terminal.Elements().Where(x => x.Attribute("name").Value == "terminalContactPerson").First().Value,
-                        terminalFuncContactPerson = terminal.Elements().Where(x => x.Attribute("name").Value == "terminalFuncContactPerson").First().Value,
-                        terminalPinBasedIndicator = terminal.Elements().Where(x => x.Attribute("name").Value == "terminalPinBasedIndicator").First().Value,
-                        terminalChipReadTermInd = terminal.Elements().Where(x => x.Attribute("name").Value == "terminalChipReadTermInd").First().Value,
-                        terminalConnectionType = terminal.Elements().Where(x => x.Attribute("name").Value == "terminalConnectionType").First().Value,
-                        terminalPrinterType = terminal.Elements().Where(x => x.Attribute("name").Value == "terminalPrinterType").First().Value,
-                        terminalInstallationType = terminal.Elements().Where(x => x.Attribute("name").Value == "terminalInstallationType").First().Value,
-                        terminalInstallationDate = DateTime.TryParse(terminal.Elements().Where(x => x.Attribute("name").Value == "terminalInstallationDate").First().Value, out DateTime terminalInstallationDateDateTime) ? terminalInstallationDateDateTime : null,
-                        terminalTechData = terminal.Elements().Where(x => x.Attribute("name").Value == "terminalTechData").First().Value,
-                        terminalHandlerId = terminal.Elements().Where(x => x.Attribute("name").Value == "terminalHandlerId").First().Value,
-                        terminalOwner = terminal.Elements().Where(x => x.Attribute("name").Value == "terminalOwner").First().Value,
-                        terminalAssignDate = DateTime.TryParse(terminal.Elements().Where(x => x.Attribute("name").Value == "terminalAssignDate").First().Value, out DateTime terminalAssignDateDateTime) ? terminalAssignDateDateTime : null,
-                        terminalProcessingMode = terminal.Elements().Where(x => x.Attribute("name").Value == "terminalProcessingMode").First().Value,
-                        terminalRecurringTransFlag = terminal.Elements().Where(x => x.Attribute("name").Value == "terminalRecurringTransFlag").First().Value,
-                        terminalAuthTandemFlag = terminal.Elements().Where(x => x.Attribute("name").Value == "terminalAuthTandemFlag").First().Value,
-                        terminalCancelAuthFlag = terminal.Elements().Where(x => x.Attribute("name").Value == "terminalCancelAuthFlag").First().Value,
-                        terminalAuthWithPrintFlag = terminal.Elements().Where(x => x.Attribute("name").Value == "terminalAuthWithPrintFlag").First().Value,
-                        terminalCashFlag = terminal.Elements().Where(x => x.Attribute("name").Value == "terminalCashFlag").First().Value,
-                        terminalCancelCashFlag = terminal.Elements().Where(x => x.Attribute("name").Value == "terminalCancelCashFlag").First().Value,
-                        terminalDataCaptureFlag = terminal.Elements().Where(x => x.Attribute("name").Value == "terminalDataCaptureFlag").First().Value,
-                        terminalDataCaptureAfterAuthFl = terminal.Elements().Where(x => x.Attribute("name").Value == "terminalDataCaptureAfterAuthFl").First().Value,
-                        terminalCancelDataCaptureFlag = terminal.Elements().Where(x => x.Attribute("name").Value == "terminalCancelDataCaptureFlag").First().Value,
-                        terminalStatusFlag = terminal.Elements().Where(x => x.Attribute("name").Value == "terminalStatusFlag").First().Value,
-                        terminalMailOrderFlag = terminal.Elements().Where(x => x.Attribute("name").Value == "terminalMailOrderFlag").First().Value,
-                        terminalCancelMailOrderFlag = terminal.Elements().Where(x => x.Attribute("name").Value == "terminalCancelMailOrderFlag").First().Value,
-                        terminalInsertionDate = DateTime.TryParse(terminal.Elements().Where(x => x.Attribute("name").Value == "terminalInsertionDate").First().Value, out DateTime terminalInsertionDateDateTime) ? terminalInsertionDateDateTime : null,
-                        terminalLastUpdateDate = DateTime.TryParse(terminal.Elements().Where(x => x.Attribute("name").Value == "terminalLastUpdateDate").First().Value, out DateTime terminalLastUpdateDateDateTime) ? terminalLastUpdateDateDateTime : null,
-                        terminalLastUserUpdating = terminal.Elements().Where(x => x.Attribute("name").Value == "terminalLastUserUpdating").First().Value,
-                        terminalMachineCityName = terminal.Elements().Where(x => x.Attribute("name").Value == "terminalMachineCityName").First().Value,
-                        terminalstatus = terminal.Elements().Where(x => x.Attribute("name").Value == "terminalstatus").First().Value,
-                        terminalInsertionUser = terminal.Elements().Where(x => x.Attribute("name").Value == "terminalInsertionUser").First().Value,
-                        terminalInsertionDate2 = DateTime.TryParse(terminal.Elements().Where(x => x.Attribute("name").Value == "terminalInsertionDate2").First().Value, out DateTime terminalInsertionDate2DateTime) ? terminalInsertionDate2DateTime : null,
-                        terminalInsertionUser2 = terminal.Elements().Where(x => x.Attribute("name").Value == "terminalInsertionUser2").First().Value,
-                        terminalLastUpdateDate2 = DateTime.TryParse(terminal.Elements().Where(x => x.Attribute("name").Value == "terminalLastUpdateDate2").First().Value, out DateTime terminalLastUpdateDate2DateTime) ? terminalLastUpdateDate2DateTime : null,
-                        terminalLastUserUpdating2 = terminal.Elements().Where(x => x.Attribute("name").Value == "terminalLastUserUpdating2").First().Value,
-                        terminalBase24TerminalProfile = terminal.Elements().Where(x => x.Attribute("name").Value == "terminalBase24TerminalProfile").First().Value,
-                        terminalFreeText = terminal.Elements().Where(x => x.Attribute("name").Value == "terminalFreeText").First().Value,
-                        terminalTransactCurrencyCode = int.TryParse(terminal.Elements().Where(x => x.Attribute("name").Value == "terminalTransactCurrencyCode").First().Value, out int terminalTransactCurrencyCodeInt) ? terminalTransactCurrencyCodeInt : null,
+
+                        // custom order by non-visible terminalRecActionIdOrderHelper property
+                        var terminalRecActionId = terminal.Elements().Where(x => x.Attribute("name").Value == "terminalRecActionId").First().Value;
+                        var terminalRecActionIdOrderHelper = "";
+                        switch (terminalRecActionId)
+                        {
+                            case "S":
+                                terminalRecActionIdOrderHelper = "A";
+                                break;
+                            case "D":
+                                terminalRecActionIdOrderHelper = "B";
+                                break;
+                            case "U":
+                                terminalRecActionIdOrderHelper = "C";
+                                break;
+                            case "N":
+                                terminalRecActionIdOrderHelper = "D";
+                                break;
+                            default:
+                                break;
+                        }
+
+
+                        var newTerminal = new Terminal()
+                        {
+                            terminalAcqCode = Convert.ToInt32(terminal.Elements().Where(x => x.Attribute("name").Value == "terminalAcqCode").First().Value),
+                            terminalCompanyId = terminal.Elements().Where(x => x.Attribute("name").Value == "terminalCompanyId").First().Value,
+                            terminalShopId = terminal.Elements().Where(x => x.Attribute("name").Value == "terminalShopId").First().Value,
+                            terminalId = terminal.Elements().Where(x => x.Attribute("name").Value == "terminalId").First().Value,
+                            terminalRecActionId = terminal.Elements().Where(x => x.Attribute("name").Value == "terminalRecActionId").First().Value,
+                            terminalPhysicalTerminalId = terminal.Elements().Where(x => x.Attribute("name").Value == "terminalPhysicalTerminalId").First().Value,
+                            terminalType = terminal.Elements().Where(x => x.Attribute("name").Value == "terminalType").First().Value,
+                            terminalEquipmentType = terminal.Elements().Where(x => x.Attribute("name").Value == "terminalEquipmentType").First().Value,
+                            terminalContactPerson = terminal.Elements().Where(x => x.Attribute("name").Value == "terminalContactPerson").First().Value,
+                            terminalFuncContactPerson = terminal.Elements().Where(x => x.Attribute("name").Value == "terminalFuncContactPerson").First().Value,
+                            terminalPinBasedIndicator = terminal.Elements().Where(x => x.Attribute("name").Value == "terminalPinBasedIndicator").First().Value,
+                            terminalChipReadTermInd = terminal.Elements().Where(x => x.Attribute("name").Value == "terminalChipReadTermInd").First().Value,
+                            terminalConnectionType = terminal.Elements().Where(x => x.Attribute("name").Value == "terminalConnectionType").First().Value,
+                            terminalPrinterType = terminal.Elements().Where(x => x.Attribute("name").Value == "terminalPrinterType").First().Value,
+                            terminalInstallationType = terminal.Elements().Where(x => x.Attribute("name").Value == "terminalInstallationType").First().Value,
+                            terminalInstallationDate = DateTime.TryParse(terminal.Elements().Where(x => x.Attribute("name").Value == "terminalInstallationDate").First().Value, out DateTime terminalInstallationDateDateTime) ? terminalInstallationDateDateTime : null,
+                            terminalTechData = terminal.Elements().Where(x => x.Attribute("name").Value == "terminalTechData").First().Value,
+                            terminalHandlerId = terminal.Elements().Where(x => x.Attribute("name").Value == "terminalHandlerId").First().Value,
+                            terminalOwner = terminal.Elements().Where(x => x.Attribute("name").Value == "terminalOwner").First().Value,
+                            terminalAssignDate = DateTime.TryParse(terminal.Elements().Where(x => x.Attribute("name").Value == "terminalAssignDate").First().Value, out DateTime terminalAssignDateDateTime) ? terminalAssignDateDateTime : null,
+                            terminalProcessingMode = terminal.Elements().Where(x => x.Attribute("name").Value == "terminalProcessingMode").First().Value,
+                            terminalRecurringTransFlag = terminal.Elements().Where(x => x.Attribute("name").Value == "terminalRecurringTransFlag").First().Value,
+                            terminalAuthTandemFlag = terminal.Elements().Where(x => x.Attribute("name").Value == "terminalAuthTandemFlag").First().Value,
+                            terminalCancelAuthFlag = terminal.Elements().Where(x => x.Attribute("name").Value == "terminalCancelAuthFlag").First().Value,
+                            terminalAuthWithPrintFlag = terminal.Elements().Where(x => x.Attribute("name").Value == "terminalAuthWithPrintFlag").First().Value,
+                            terminalCashFlag = terminal.Elements().Where(x => x.Attribute("name").Value == "terminalCashFlag").First().Value,
+                            terminalCancelCashFlag = terminal.Elements().Where(x => x.Attribute("name").Value == "terminalCancelCashFlag").First().Value,
+                            terminalDataCaptureFlag = terminal.Elements().Where(x => x.Attribute("name").Value == "terminalDataCaptureFlag").First().Value,
+                            terminalDataCaptureAfterAuthFl = terminal.Elements().Where(x => x.Attribute("name").Value == "terminalDataCaptureAfterAuthFl").First().Value,
+                            terminalCancelDataCaptureFlag = terminal.Elements().Where(x => x.Attribute("name").Value == "terminalCancelDataCaptureFlag").First().Value,
+                            terminalStatusFlag = terminal.Elements().Where(x => x.Attribute("name").Value == "terminalStatusFlag").First().Value,
+                            terminalMailOrderFlag = terminal.Elements().Where(x => x.Attribute("name").Value == "terminalMailOrderFlag").First().Value,
+                            terminalCancelMailOrderFlag = terminal.Elements().Where(x => x.Attribute("name").Value == "terminalCancelMailOrderFlag").First().Value,
+                            terminalInsertionDate = DateTime.TryParse(terminal.Elements().Where(x => x.Attribute("name").Value == "terminalInsertionDate").First().Value, out DateTime terminalInsertionDateDateTime) ? terminalInsertionDateDateTime : null,
+                            terminalLastUpdateDate = DateTime.TryParse(terminal.Elements().Where(x => x.Attribute("name").Value == "terminalLastUpdateDate").First().Value, out DateTime terminalLastUpdateDateDateTime) ? terminalLastUpdateDateDateTime : null,
+                            terminalLastUserUpdating = terminal.Elements().Where(x => x.Attribute("name").Value == "terminalLastUserUpdating").First().Value,
+                            terminalMachineCityName = terminal.Elements().Where(x => x.Attribute("name").Value == "terminalMachineCityName").First().Value,
+                            terminalstatus = terminal.Elements().Where(x => x.Attribute("name").Value == "terminalstatus").First().Value,
+                            terminalInsertionUser = terminal.Elements().Where(x => x.Attribute("name").Value == "terminalInsertionUser").First().Value,
+                            terminalInsertionDate2 = DateTime.TryParse(terminal.Elements().Where(x => x.Attribute("name").Value == "terminalInsertionDate2").First().Value, out DateTime terminalInsertionDate2DateTime) ? terminalInsertionDate2DateTime : null,
+                            terminalInsertionUser2 = terminal.Elements().Where(x => x.Attribute("name").Value == "terminalInsertionUser2").First().Value,
+                            terminalLastUpdateDate2 = DateTime.TryParse(terminal.Elements().Where(x => x.Attribute("name").Value == "terminalLastUpdateDate2").First().Value, out DateTime terminalLastUpdateDate2DateTime) ? terminalLastUpdateDate2DateTime : null,
+                            terminalLastUserUpdating2 = terminal.Elements().Where(x => x.Attribute("name").Value == "terminalLastUserUpdating2").First().Value,
+                            terminalBase24TerminalProfile = terminal.Elements().Where(x => x.Attribute("name").Value == "terminalBase24TerminalProfile").First().Value,
+                            terminalFreeText = terminal.Elements().Where(x => x.Attribute("name").Value == "terminalFreeText").First().Value,
+                            terminalTransactCurrencyCode = int.TryParse(terminal.Elements().Where(x => x.Attribute("name").Value == "terminalTransactCurrencyCode").First().Value, out int terminalTransactCurrencyCodeInt) ? terminalTransactCurrencyCodeInt : null,
+                            terminalRecActionIdOrderHelper = terminalRecActionIdOrderHelper,
                     };
 
                     bindedTerminals.Add(newTerminal);

@@ -1,8 +1,8 @@
 ﻿@using OrdersReaderBlazorApp.Data;
 
 
-<Grid @ref="grid" TItem="Terminal" class="table table-hover table-bordered table-striped" DataProvider="TerminalsDataProvider" AllowFiltering="true" AllowPaging="true" PageSize="10" Responsive="true" AllowSorting="true">
-    <GridColumn TItem="Terminal" HeaderText="Terminal Rec Action ID" PropertyName="terminalRecActionId" SortKeySelector="@(item => item.terminalRecActionId)" IsDefaultSortColumn="true" SortDirection="SortDirection.Ascending">
+<Grid @ref="grid" TItem="Terminal" class="table table-hover table-bordered table-striped custom-row-color" DataProvider="TerminalsDataProvider" AllowFiltering="true" AllowPaging="true" PageSize="10" Responsive="true" AllowSorting="true">
+    <GridColumn TItem="Terminal" HeaderText="Terminal Rec Action ID" PropertyName="terminalRecActionId" SortKeySelector="@(item => item.terminalRecActionIdOrderHelper)" IsDefaultSortColumn="true" SortDirection="SortDirection.Ascending">
         @context.terminalRecActionId
     </GridColumn>
     <GridColumn TItem="Terminal" HeaderText="Terminal ID" PropertyName="terminalId">

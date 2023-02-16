@@ -101,6 +101,9 @@ namespace OrdersReaderBlazorApp.Data
 		public string terminalBase24TerminalProfile { get; set; }
 		public string terminalFreeText { get; set; }
 		public int? terminalTransactCurrencyCode { get; set; }
+
+        // custom order helper field
+        public string terminalRecActionIdOrderHelper { get; set; }
     }
 }
 
