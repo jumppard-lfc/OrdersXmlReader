@@ -1,4 +1,4 @@
-﻿@using OrdersReaderBlazorApp.Data;
+﻿@using OrdersReaderBlazorApp.Data
 
 <Modal @ref="modal" Title="Merchant Info" Size="ModalSize.Large">
     <BodyTemplate>
@@ -62,6 +62,22 @@
 <Grid @ref="grid" TItem="Shop" class="table table-hover table-bordered table-striped" DataProvider="ShopsDataProvider" AllowFiltering="true" AllowPaging="true" PageSize="10" Responsive="true" AllowSorting="true">
     <GridColumn TItem="Shop" HeaderText="Shop Record Action" PropertyName="shopRecordAction" SortKeySelector="@(item => item.shopRecordActionOrderHelper)" IsDefaultSortColumn="true" SortDirection="SortDirection.Ascending">
         @context.shopRecordAction
+        @if (context.shopRecordAction == "S")
+        {
+            <span class="green"></span>
+        }
+        else if (context.shopRecordAction == "D")
+        {
+            <span class="red"></span>
+        }
+        else if (context.shopRecordAction == "U")
+        {
+            <span class="orange"></span>
+        }
+        else if (context.shopRecordAction == "N")
+        {
+            <span class="grey"></span>
+        }
     </GridColumn>
     <GridColumn TItem="Shop" HeaderText="Shop Company ID" PropertyName="shopCompanyId">
         @context.shopCompanyId
@@ -86,9 +102,12 @@
 
     BlazorBootstrap.Grid<Shop> grid;
 
+    [Inject] protected IJSRuntime JS { get; set; }
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         await base.OnAfterRenderAsync(firstRender);
+        await JS.InvokeVoidAsync("changeRowColor");
     }
 
     private async Task<GridDataProviderResult<Shop>> ShopsDataProvider(GridDataProviderRequest<Shop> request)
