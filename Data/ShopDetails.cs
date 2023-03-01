@@ -16,6 +16,8 @@ namespace OrdersReaderBlazorApp.Data
         public string shopFreeText { get; set; }
         public string mcc { get; set; }
         public string action { get; set; }
+
+        public string backgroundPopupColorCssClass { get; set; }
     }
 }
 

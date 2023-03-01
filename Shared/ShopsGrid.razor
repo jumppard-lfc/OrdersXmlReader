@@ -1,6 +1,6 @@
 ﻿@using OrdersReaderBlazorApp.Data
 
-<Modal @ref="modal" Title="Merchant Info" Size="ModalSize.Large">
+<Modal @ref="modal" Title="Merchant Info" Size="ModalSize.Large" BodyCssClass=@shopDetails.backgroundPopupColorCssClass>
     <BodyTemplate>
         <table>
             <tr>
@@ -94,44 +94,49 @@
 @code {
 
 
-    [Parameter]
-    public List<Shop> shops { get; set; }
+            [Parameter]
+            public List<Shop> shops { get; set; }
 
-    [Parameter]
-    public Data.ShopDetails shopDetails { get; set; }
+            [Parameter]
+            public Data.ShopDetails shopDetails { get; set; }
 
-    BlazorBootstrap.Grid<Shop> grid;
+            BlazorBootstrap.Grid<Shop> grid;
 
-    [Inject] protected IJSRuntime JS { get; set; }
+            [Inject] protected IJSRuntime JS { get; set; }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        await base.OnAfterRenderAsync(firstRender);
-        await JS.InvokeVoidAsync("changeRowColor");
-    }
+        {
+            await base.OnAfterRenderAsync(firstRender);
+            await JS.InvokeVoidAsync("changeRowColor");
+        }
 
-    private async Task<GridDataProviderResult<Shop>> ShopsDataProvider(GridDataProviderRequest<Shop> request)
-    {
-        return await Task.FromResult(request.ApplyTo(shops));
-    }
+        private async Task<GridDataProviderResult<Shop>> ShopsDataProvider(GridDataProviderRequest<Shop> request)
+        {
+            return await Task.FromResult(request.ApplyTo(shops));
+        }
 
-    void showShopDetails(string shopId)
-    {
-        shopDetails = new Data.ShopDetails();
+        void showShopDetails(string shopId)
+        {
+            shopDetails = new Data.ShopDetails();
 
-        shopDetails.merchantID = shops.Where(x => x.shopId == shopId).First().shopId;
-        shopDetails.chain = shops.Where(x => x.shopId == shopId).First().shopCompanyId;
-        shopDetails.name = shops.Where(x => x.shopId == shopId).First().shopName;
-        shopDetails.streetAddress = shops.Where(x => x.shopId == shopId).First().shopStreet + ", " + shops.Where(x => x.shopId == shopId).First().shopHouseNum;
-        shopDetails.town = shops.Where(x => x.shopId == shopId).First().shopCity;
-        shopDetails.postCode = shops.Where(x => x.shopId == shopId).First().shopZip;
-        shopDetails.phone1 = shops.Where(x => x.shopId == shopId).First().shopFirstContactMobileNumber;
-        shopDetails.phone2 = shops.Where(x => x.shopId == shopId).First().shopSecondContactMobileNumber;
-        shopDetails.emails = shops.Where(x => x.shopId == shopId).First().shopFirstContactEmailAddress + shops.Where(x => x.shopId == shopId).First().shopSecondContactEmailAddress;
-        shopDetails.contact = shops.Where(x => x.shopId == shopId).First().shopContactPerson;
-        shopDetails.shopFreeText = shops.Where(x => x.shopId == shopId).First().shopFreeText;
-        shopDetails.mcc = shops.Where(x => x.shopId == shopId).First().shopMCC == null ? "" : shops.Where(x => x.shopId == shopId).First().shopMCC.ToString();
-        shopDetails.action = shops.Where(x => x.shopId == shopId).First().shopRecordAction;
+            shopDetails.merchantID = shops.Where(x => x.shopId == shopId).First().shopId;
+            shopDetails.chain = shops.Where(x => x.shopId == shopId).First().shopCompanyId;
+            shopDetails.name = shops.Where(x => x.shopId == shopId).First().shopName;
+            shopDetails.streetAddress = shops.Where(x => x.shopId == shopId).First().shopStreet + ", " + shops.Where(x => x.shopId == shopId).First().shopHouseNum;
+            shopDetails.town = shops.Where(x => x.shopId == shopId).First().shopCity;
+            shopDetails.postCode = shops.Where(x => x.shopId == shopId).First().shopZip;
+            shopDetails.phone1 = shops.Where(x => x.shopId == shopId).First().shopFirstContactMobileNumber;
+            shopDetails.phone2 = shops.Where(x => x.shopId == shopId).First().shopSecondContactMobileNumber;
+            shopDetails.emails = shops.Where(x => x.shopId == shopId).First().shopFirstContactEmailAddress + shops.Where(x => x.shopId == shopId).First().shopSecondContactEmailAddress;
+            shopDetails.contact = shops.Where(x => x.shopId == shopId).First().shopContactPerson;
+            shopDetails.shopFreeText = shops.Where(x => x.shopId == shopId).First().shopFreeText;
+            shopDetails.mcc = shops.Where(x => x.shopId == shopId).First().shopMCC == null ? "" : shops.Where(x => x.shopId == shopId).First().shopMCC.ToString();
+            shopDetails.action = shops.Where(x => x.shopId == shopId).First().shopRecordAction;
+
+            if (shopDetails.action == "S") shopDetails.backgroundPopupColorCssClass = "bg-green";
+            else if (shopDetails.action == "D") shopDetails.backgroundPopupColorCssClass = "bg-red";
+            else if (shopDetails.action == "U") shopDetails.backgroundPopupColorCssClass = "bg-orange";
+            else if (shopDetails.action == "N") shopDetails.backgroundPopupColorCssClass = "bg-gray";
     }
 
     private Modal modal;
