@@ -4,7 +4,7 @@
         greenElements.forEach((element) => {
             let parent = element.parentNode.parentNode;
             parent.classList.add('bg-green');
-            parent.classList.add('text-white');
+            parent.classList.add('text-dark');
             parent.classList.add('bg-opacity-75');
         });
     }
