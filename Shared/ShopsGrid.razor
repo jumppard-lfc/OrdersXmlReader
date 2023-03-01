@@ -59,7 +59,7 @@
     </FooterTemplate>
 </Modal>
 
-<Grid @ref="grid" TItem="Shop" class="table table-hover table-bordered table-striped" DataProvider="ShopsDataProvider" AllowFiltering="true" AllowPaging="true" PageSize="10" Responsive="true" AllowSorting="true">
+<Grid @ref="grid" TItem="Shop" class="table table-hover table-bordered table-striped" DataProvider="ShopsDataProvider" AllowFiltering="false" AllowPaging="false" PageSize="10" Responsive="true" AllowSorting="true">
     <GridColumn TItem="Shop" HeaderText="Shop Record Action" PropertyName="shopRecordAction" SortKeySelector="@(item => item.shopRecordActionOrderHelper)" IsDefaultSortColumn="true" SortDirection="SortDirection.Ascending">
         @context.shopRecordAction
         @if (context.shopRecordAction == "S")
@@ -76,7 +76,7 @@
         }
         else if (context.shopRecordAction == "N")
         {
-            <span class="grey"></span>
+            <span class="gray"></span>
         }
     </GridColumn>
     <GridColumn TItem="Shop" HeaderText="Shop Company ID" PropertyName="shopCompanyId">

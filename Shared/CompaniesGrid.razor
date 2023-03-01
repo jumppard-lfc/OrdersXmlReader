@@ -1,7 +1,7 @@
 ﻿@using OrdersReaderBlazorApp.Data;
 
 
-<Grid @ref="grid" TItem="Company" class="table table-hover table-bordered table-striped" DataProvider="CompaniesDataProvider" AllowFiltering="true" AllowPaging="true" PageSize="10" Responsive="true">
+<Grid @ref="grid" TItem="Company" class="table table-hover table-bordered table-striped" DataProvider="CompaniesDataProvider" AllowFiltering="false" AllowPaging="false" PageSize="10" Responsive="true">
     <GridColumn TItem="Company" HeaderText="Company ID" PropertyName="companyId">
         @context.companyId
     </GridColumn>
