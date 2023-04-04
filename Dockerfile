@@ -9,6 +9,7 @@ FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
 COPY ["OrdersReaderBlazorApp.csproj", "."]
 RUN dotnet restore "./OrdersReaderBlazorApp.csproj"
+RUN echo "dotnet restore completed"
 COPY . .
 WORKDIR "/src/."
 RUN dotnet build "OrdersReaderBlazorApp.csproj" -c Release -o /app/build
