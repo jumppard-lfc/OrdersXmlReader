@@ -15,7 +15,7 @@
 {
     <CompaniesGrid companies="@companies" />
     <ShopsGrid shops="@shops" shopDetails="@shopDetails" />
-    <TerminalsGrid terminals="@terminals" />
+    <TerminalsGrid terminals="@terminals" terminalFreeTextDetail="@terminalFreeTextDetail" />
 } else
 {
     <Callout Type="CalloutType.Warning">
@@ -30,6 +30,7 @@
         private List<Shop> shops = new List<Shop>();
         private List<Terminal> terminals = new List<Terminal>();
         public Data.ShopDetails shopDetails = new Data.ShopDetails();
+        public Data.TerminalFreeTextDetail terminalFreeTextDetail = new Data.TerminalFreeTextDetail();
         public string warning = "";
 
         private async Task ReadFile(InputFileChangeEventArgs e)

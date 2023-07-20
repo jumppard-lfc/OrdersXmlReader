@@ -1,5 +1,22 @@
 ﻿@using OrdersReaderBlazorApp.Data;
 
+<Modal @ref="modal" Title="Terminal Free Text" Size="ModalSize.Large" BodyCssClass=@terminalFreeTextDetail.backgroundPopupColorCssClass>
+    <BodyTemplate>
+        <table>
+            <tr>
+                <td colspan="2"><b>Terminal ID: </b></td>
+                <td>@terminalFreeTextDetail.terminalId</td>
+            </tr>
+            <tr>
+                <td colspan="2"><b>Terminal Free Text: </b></td>
+                <td>@terminalFreeTextDetail.terminalFreeText</td>
+            </tr>
+        </table>
+    </BodyTemplate>
+    <FooterTemplate>
+        <Button Color="ButtonColor.Secondary" @onclick="OnHideModalClick">Close</Button>
+    </FooterTemplate>
+</Modal>
 
 <Grid @ref="grid" TItem="Terminal" class="table table-hover table-bordered table-striped custom-row-color" DataProvider="TerminalsDataProvider" AllowFiltering="false" AllowPaging="false" PageSize="10" Responsive="true" AllowSorting="true">
     <GridColumn TItem="Terminal" HeaderText="Terminal Rec Action ID" PropertyName="terminalRecActionId" SortKeySelector="@(item => item.terminalRecActionIdOrderHelper)" IsDefaultSortColumn="true" SortDirection="SortDirection.Ascending">
@@ -42,6 +59,18 @@
     <GridColumn TItem="Terminal" HeaderText="Terminal Type" PropertyName="terminalType">
         @context.terminalType
     </GridColumn>
+    <GridColumn TItem="Terminal" HeaderText="Terminal Free Text" PropertyName="terminalFreeText">
+        
+        @if (string.IsNullOrEmpty(context.terminalFreeText) == false)
+        {
+            <button class="btn btn-primary mb-3" @onclick="() => OnShowModalClick(context.terminalId)" style="float: none;">Detail</button>
+        }
+        else
+        {
+            <span>N/A</span>
+        }
+
+    </GridColumn>
 </Grid>
 
 @code {
@@ -49,6 +78,9 @@
 
     [Parameter]
     public List<Terminal> terminals { get; set; }
+
+    [Parameter]
+    public Data.TerminalFreeTextDetail terminalFreeTextDetail { get; set; }
 
     BlazorBootstrap.Grid<Terminal> grid;
 
@@ -60,6 +92,34 @@
     private async Task<GridDataProviderResult<Terminal>> TerminalsDataProvider(GridDataProviderRequest<Terminal> request)
     {
         return await Task.FromResult(request.ApplyTo(terminals));
+    }
+
+    void showTerminalFreeTextDetail(string terminalId)
+    {
+        terminalFreeTextDetail = new Data.TerminalFreeTextDetail();
+
+        terminalFreeTextDetail.terminalId = terminalId;
+        terminalFreeTextDetail.terminalFreeText = terminals.Where(x => x.terminalId == terminalId).First().terminalFreeText;
+        terminalFreeTextDetail.terminalCompanyId = terminals.Where(x => x.terminalId == terminalId).First().terminalCompanyId;
+        terminalFreeTextDetail.terminalShopId = terminals.Where(x => x.terminalId == terminalId).First().terminalShopId;
+        terminalFreeTextDetail.action = terminals.Where(x => x.terminalId == terminalId).First().terminalRecActionId;
+
+        if (terminalFreeTextDetail.action == "S") terminalFreeTextDetail.backgroundPopupColorCssClass = "bg-green";
+        else if (terminalFreeTextDetail.action == "D") terminalFreeTextDetail.backgroundPopupColorCssClass = "bg-red";
+        else if (terminalFreeTextDetail.action == "U") terminalFreeTextDetail.backgroundPopupColorCssClass = "bg-orange";
+        else if (terminalFreeTextDetail.action == "N") terminalFreeTextDetail.backgroundPopupColorCssClass = "bg-gray";
+        
+    }
+
+    private Modal modal;
+    private async Task OnShowModalClick(string terminalId)
+    {
+        showTerminalFreeTextDetail(terminalId);
+        await modal?.ShowAsync();
+    }
+    private async Task OnHideModalClick()
+    {
+        await modal?.HideAsync();
     }
 }
 

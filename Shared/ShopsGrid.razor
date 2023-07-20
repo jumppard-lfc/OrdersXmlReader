@@ -94,17 +94,17 @@
 @code {
 
 
-            [Parameter]
-            public List<Shop> shops { get; set; }
+        [Parameter]
+        public List<Shop> shops { get; set; }
 
-            [Parameter]
-            public Data.ShopDetails shopDetails { get; set; }
+        [Parameter]
+        public Data.ShopDetails shopDetails { get; set; }
 
-            BlazorBootstrap.Grid<Shop> grid;
+        BlazorBootstrap.Grid<Shop> grid;
 
-            [Inject] protected IJSRuntime JS { get; set; }
+        [Inject] protected IJSRuntime JS { get; set; }
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+        protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             await base.OnAfterRenderAsync(firstRender);
             await JS.InvokeVoidAsync("changeRowColor");
